@@ -3,31 +3,31 @@ from datetime import datetime
 
 def registrar_actividad(actividad, descripcion, urgencia, notificado_por, realizado_por):
     fecha_actual = datetime.now().strftime("%Y-%m-%d")
-    hora_actual = datetime.now().strftime("%H:%M:%S")
+    hora_actual = datetime.now().strftime("%H:%M")
     registro = {
         "Fecha": fecha_actual,
         "Hora": hora_actual,
+        "Urgencia": urgencia,
         "Actividad": actividad,
         "Descripción": descripcion,
-        "Urgencia": urgencia,
         "Notificado por": notificado_por,
         "Realizado por": realizado_por
     }
     return registro
 
 def exportar_actividades(actividades):
-    fecha_actual = datetime.now().strftime("%Y-%m-%d")
-    archivo = f"actividades_{fecha_actual}.xlsx"
+    archivo = "actividades.xlsx"
     try:
         df_existente = pd.read_excel(archivo)
         df_nuevo = pd.DataFrame(actividades)
         df_final = pd.concat([df_existente, df_nuevo])
     except FileNotFoundError:
         df_final = pd.DataFrame(actividades)
+    df_final.sort_values(by=['Fecha', 'Hora'], inplace=True)
     df_final.to_excel(archivo, index=False)
 
 print(
-    "Ingrese uno por uno los soportes o actividades realizadas presionando enter después de cada uno.\nEjemplo\nFulano:falla de la impresora de la oficina tal...\nAl final del día, presione enter hasta que se cierre el programa o aparezca un mensaje de que los datos han sido exportados al archivo de excel"
+    "Ingrese uno por uno los soportes o actividades realizadas presionando ENTER después de cada uno.\nEjemplo\nFulano:falla de la impresora de la oficina tal...\nAl final del día, presione enter hasta que se cierre el programa o aparezca un mensaje de que los datos han sido exportados al archivo de excel"
 )
 
 actividades = []
